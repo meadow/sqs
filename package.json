@@ -4,8 +4,9 @@
   "description": "Client for Amazon SQS with built-in long polling.",
   "main": "index.js",
   "scripts": {
+    "cover": "nyc ava",
     "lint": "eslint ./ --ext .js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava"
   },
   "repository": {
     "type": "git",
@@ -33,7 +34,21 @@
   },
   "devDependencies": {
     "@meadow/eslint-config": "^2.0.0",
+    "ava": "^0.15.2",
     "babel-eslint": "^6.1.2",
-    "eslint": "^3.1.1"
+    "codecov": "^1.0.1",
+    "eslint": "^3.1.1",
+    "nyc": "^7.0.0",
+    "sinon": "^1.17.4"
+  },
+  "ava": {
+    "files": [
+      "tests/**/*.js"
+    ]
+  },
+  "nyc": {
+    "include": [
+      "index.js"
+    ]
   }
 }

@@ -3,19 +3,12 @@
 const assign = require('lodash.assign');
 const aws = require('aws-sdk');
 
-const DEFAULT_OPTS = {
-  region: 'us-standard',
-  accessKeyId: '',
-  secretAccessKey: '',
-  queue: ''
-};
-
-const Client = function Client (opts = DEFAULT_OPTS) {
+const Client = function Client (opts = {}) {
   if (!(this instanceof Client)) {
     return new Client(opts);
   }
 
-  const { region, accessKeyId, secretAccessKey, queue } = opts;
+  const { region = 'us-standard', accessKeyId, secretAccessKey, queue } = opts;
 
   if (!accessKeyId || !secretAccessKey || !queue) {
     throw new Error('Missing a required parameter: accessKeyId, secretAccessKey, or queue');
@@ -39,6 +32,10 @@ const Client = function Client (opts = DEFAULT_OPTS) {
  */
 
 Client.prototype.sendMessage = function sendMessage (payload) {
+  if (!payload) {
+    throw new Error('Messages must have a payload.');
+  }
+
   return new Promise((resolve, reject) => {
     this.sqs.sendMessage({
       MessageBody: JSON.stringify(payload)
