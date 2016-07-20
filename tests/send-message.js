@@ -7,7 +7,9 @@ test.beforeEach((t) => {
   t.context.client = sqs({ accessKeyId: 'foo', secretAccessKey: 'bar', queue: 'baz' });
 
   sinon.stub(t.context.client.sqs, 'sendMessage', function (params, callback) {
-    callback(null, { foo: 'bar' });
+    setImmediate(function () {
+      callback(null, { foo: 'bar' });
+    });
   });
 });
 
