@@ -31,4 +31,4 @@ execSync(`git tag ${nextRef}`);
 execSync('git push origin master');
 execSync(`git push origin ${nextRef}`);
 
-execSync('npm publish', { stdio: [0, 1, 2] });
+execSync('npm publish --access public', { stdio: [0, 1, 2] });
