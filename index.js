@@ -22,6 +22,7 @@ const Client = function Client (opts = DEFAULT_OPTS) {
   }
 
   this.sqs = new aws.SQS({
+    apiVersion: '2016-07-19',
     region,
     accessKeyId,
     secretAccessKey,
