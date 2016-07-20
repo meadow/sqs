@@ -1,7 +1,7 @@
 {
   "name": "@meadow/sqs",
   "version": "1.0.0",
-  "description": "Client for Amazon SQS with built-in long polling.",
+  "description": "Promise/JSON based client for Amazon SQS with automatic long-polling.",
   "main": "index.js",
   "scripts": {
     "cover": "nyc ava",
