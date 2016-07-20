@@ -4,6 +4,7 @@
   "description": "Client for Amazon SQS with built-in long polling.",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint ./ --ext .js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -29,5 +30,10 @@
   "dependencies": {
     "aws-sdk": "^2.4.7",
     "lodash.assign": "^4.0.9"
+  },
+  "devDependencies": {
+    "@meadow/eslint-config": "^2.0.0",
+    "babel-eslint": "^6.1.2",
+    "eslint": "^3.1.1"
   }
 }

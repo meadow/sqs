@@ -1,0 +1,7 @@
+{
+  "extends": "@meadow",
+
+  "parserOptions": {
+      "sourceType": "script"
+    },
+}

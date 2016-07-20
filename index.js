@@ -8,10 +8,12 @@ const DEFAULT_OPTS = {
   accessKeyId: '',
   secretAccessKey: '',
   queue: ''
-}
+};
 
 const Client = function Client (opts = DEFAULT_OPTS) {
-  if (!(this instanceof Client)) return new Client(opts);
+  if (!(this instanceof Client)) {
+    return new Client(opts);
+  }
 
   const { region, accessKeyId, secretAccessKey, queue } = opts;
 
@@ -44,7 +46,7 @@ Client.prototype.sendMessage = function sendMessage (payload) {
         return reject(err);
       }
 
-      resolve(data);
+      return resolve(data);
     });
   });
 };
@@ -72,6 +74,10 @@ Client.prototype.pollQueue = function pollQueue (opts = {}, handler) {
   const self = this;
 
   this.sqs.receiveMessage(this.receiveOptions, (err, data) => {
+    if (err) {
+      // Not needed
+    }
+
     const promises = [];
 
     if (data && data.Messages) {
@@ -109,7 +115,7 @@ Client.prototype.handleMessage = function handleMessage (message, handler) {
 
   return messagePromise.then(() => {
     return this.deleteMessage(message.ReceiptHandle);
-  })
+  });
 };
 
 /*
