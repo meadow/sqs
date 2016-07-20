@@ -6,6 +6,7 @@
   "scripts": {
     "cover": "nyc ava",
     "lint": "eslint ./ --ext .js",
+    "release": "node scripts/release.js",
     "test": "ava"
   },
   "repository": {
