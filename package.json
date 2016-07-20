@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/meadow/sqs",
   "dependencies": {
-    "aws-sdk": "^2.4.7"
+    "aws-sdk": "^2.4.7",
+    "lodash.assign": "^4.0.9"
   }
 }
