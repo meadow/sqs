@@ -15,11 +15,16 @@ test.beforeEach((t) => {
   sinon.stub(t.context.client, 'deleteMessage', function () {
     return Promise.resolve();
   });
+
+  sinon.stub(t.context.client, 'removeVisibilityTimeout', function () {
+    return Promise.resolve();
+  });
 });
 
 test.afterEach((t) => {
   t.context.client.sqs.receiveMessage.restore();
   t.context.client.deleteMessage.restore();
+  t.context.client.removeVisibilityTimeout.restore();
 });
 
 test('should use the default options', (t) => {
@@ -84,6 +89,29 @@ test.cb('should call delete message', (t) => {
   });
 });
 
+test.cb('should call removeVisibilityTimeout', (t) => {
+  t.plan(1);
+
+  t.context.data = {
+    Messages: [{ Body: '{ "foobar": "bazqux" }' }]
+  };
+
+  t.context.client.pollQueue({}, function () {
+    const promise = Promise.resolve();
+
+    setImmediate(function () {
+      promise.then(function () {
+        t.is(t.context.client.removeVisibilityTimeout.callCount, 1);
+        t.end();
+      });
+    });
+
+    return promise.then(function () {
+      throw new Error('bar');
+    });
+  });
+});
+
 test.cb('should call poll queue multiple times', (t) => {
   t.plan(1);
 
@@ -102,7 +130,12 @@ test.cb('should call poll queue multiple times', (t) => {
 test.cb('should call poll queue again even after errors', (t) => {
   t.plan(1);
 
+  t.context.client.removeVisibilityTimeout.restore();
   sinon.spy(t.context.client, 'pollQueue');
+
+  sinon.stub(t.context.client, 'removeVisibilityTimeout', function () {
+    throw new Error('bar');
+  });
 
   t.context.data = {
     Messages: [{ Body: '{ "foobar": "bazqux" }' }]
