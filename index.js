@@ -113,6 +113,19 @@ Client.prototype.handleMessage = function handleMessage (message, handler) {
 
   return messagePromise.then(() => {
     return this.deleteMessage(message.ReceiptHandle);
+  }).catch(() => {
+    return this.removeVisibilityTimeout(message);
+  });
+};
+
+Client.prototype.removeVisibilityTimeout = function removeVisibilityTimeout (message) {
+  return new Promise((resolve) => {
+    this.sqs.changeMessageVisibility({
+      ReceiptHandle: message.ReceiptHandle,
+      VisibilityTimeout: 0
+    }, function () {
+      resolve();
+    });
   });
 };
 
