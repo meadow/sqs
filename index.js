@@ -31,15 +31,15 @@ const Client = function Client (opts = {}) {
  * @param payload - An object containing the message data
  */
 
-Client.prototype.sendMessage = function sendMessage (payload) {
+Client.prototype.sendMessage = function sendMessage (payload, options = {}) {
   if (!payload) {
     throw new Error('Messages must have a payload.');
   }
 
+  options.MessageBody = JSON.stringify(payload);
+
   return new Promise((resolve, reject) => {
-    this.sqs.sendMessage({
-      MessageBody: JSON.stringify(payload)
-    }, function (err, data) {
+    this.sqs.sendMessage(options, function (err, data) {
       if (err) {
         return reject(err);
       }

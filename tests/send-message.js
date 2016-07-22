@@ -37,6 +37,14 @@ test('calls sendMessage with the message body', (t) => {
   t.true(t.context.client.sqs.sendMessage.calledWith({ MessageBody: JSON.stringify(message) }));
 });
 
+test('should extend the default options', (t) => {
+  const message = { type: 'ACTION_TYPE', payload: 1337 };
+
+  t.context.client.sendMessage(message, { DelaySeconds: 3 });
+
+  t.true(t.context.client.sqs.sendMessage.calledWith({ MessageBody: JSON.stringify(message), DelaySeconds: 3 }));
+});
+
 test('returns the data from the promise', async (t) => {
   const data = await t.context.client.sendMessage({ type: 'ACTION_TYPE', payload: 1337 });
 
