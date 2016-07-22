@@ -58,9 +58,10 @@ client.pollQueue({ VisibilityTimeout: 600 }, function (message) {
 
 Everything is built around promises and JSON. Amazon SQS only supports message bodies as strings, but this client will transform that to and from JSON for you automatically. When polling the queue, `@meadow/sqs` expects that you return a promise. When that promise resolves, the message will automatically be deleted from the SQS queue.
 
-#### sendMessage(payload)
+#### sendMessage(payload, [options])
 
 - `payload` - A JSON object that will be persisted to the Amazon SQS queue.
+- `options` - An object that will be sent to the Amazon SQS `sendMessage` method.
 
 #### pollQueue (options, handler)
 
