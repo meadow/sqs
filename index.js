@@ -105,11 +105,9 @@ Client.prototype.pollQueue = function pollQueue (opts = {}, handler) {
 
 Client.prototype.handleMessage = function handleMessage (message, handler) {
   const body = JSON.parse(message.Body);
-  const messagePromise = handler(body, message);
-
-  if (!messagePromise) {
-    return Promise.resolve();
-  }
+  const messagePromise = Promise.resolve().then(function () {
+    return handler(body, message);
+  });
 
   return messagePromise.then(() => {
     return this.deleteMessage(message.ReceiptHandle);
