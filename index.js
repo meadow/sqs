@@ -14,6 +14,7 @@ const Client = function Client (opts = {}) {
     throw new Error('Missing a required parameter: accessKeyId, secretAccessKey, or queue');
   }
 
+  this.options = opts;
   this.sqs = new aws.SQS({
     apiVersion: '2016-07-19',
     region,
@@ -112,6 +113,10 @@ Client.prototype.handleMessage = function handleMessage (message, handler) {
   return messagePromise.then(() => {
     return this.deleteMessage(message.ReceiptHandle);
   }).catch(() => {
+    if (this.options.preventVisibilityTimeoutRemoval === true) {
+      return Promise.resolve();
+    }
+
     return this.removeVisibilityTimeout(message);
   });
 };
