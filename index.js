@@ -105,8 +105,9 @@ Client.prototype.pollQueue = function pollQueue (opts = {}, handler) {
  */
 
 Client.prototype.handleMessage = function handleMessage (message, handler) {
-  const body = JSON.parse(message.Body);
   const messagePromise = Promise.resolve().then(function () {
+    const body = JSON.parse(message.Body);
+
     return handler(body, message);
   });
 
