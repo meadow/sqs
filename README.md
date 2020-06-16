@@ -63,6 +63,11 @@ Everything is built around promises and JSON. Amazon SQS only supports message b
 - `payload` - A JSON object that will be persisted to the Amazon SQS queue.
 - `options` - An object that will be sent to the Amazon SQS `sendMessage` method.
 
+#### sendMessageBatch(payloads, [options])
+
+- `payloads` - AN array of JSON objects to send to the SQS queue
+- `options` - An object that will be sent alongside each message
+
 #### pollQueue (options, handler)
 
 Calling this method will long-poll the Amazon SQS queue waiting for messages to come in. For each message that is received, the handler will be called with the body of the message as a JSON object. You are required to return a promise from your handler that resolves when the work for this message is completed. After the promise resolves, `@meadow/sqs` will automatically delete the message from the SQS queue.
