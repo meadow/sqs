@@ -122,6 +122,28 @@ Client.prototype.handleMessage = function handleMessage (message, handler) {
   });
 };
 
+/*
+ * Change the visibility timeout of a message
+ *
+ * @param message - A message returned from SQS
+ * @param newVisibilityTimeout - The new visibility timeout measured in seconds
+ */
+
+Client.prototype.changeVisibilityTimeout = function (message, newVisibilityTimeout) {
+  return new Promise((resolve, reject) => {
+    this.sqs.changeMessageVisibility({
+      ReceiptHandle: message.ReceiptHandle,
+      VisibilityTimeout: newVisibilityTimeout
+    }, function (err, data) {
+      if (data) {
+        return resolve(data);
+      }
+
+      return reject(err);
+    });
+  });
+}
+
 Client.prototype.removeVisibilityTimeout = function removeVisibilityTimeout (message) {
   return new Promise((resolve) => {
     this.sqs.changeMessageVisibility({
