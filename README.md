@@ -63,9 +63,19 @@ Everything is built around promises and JSON. Amazon SQS only supports message b
 - `payload` - A JSON object that will be persisted to the Amazon SQS queue.
 - `options` - An object that will be sent to the Amazon SQS `sendMessage` method.
 
+#### sendMessageBatch(payloads, [options])
+
+- `payloads` - AN array of JSON objects to send to the SQS queue
+- `options` - An object that will be sent alongside each message
+
 #### pollQueue (options, handler)
 
 Calling this method will long-poll the Amazon SQS queue waiting for messages to come in. For each message that is received, the handler will be called with the body of the message as a JSON object. You are required to return a promise from your handler that resolves when the work for this message is completed. After the promise resolves, `@meadow/sqs` will automatically delete the message from the SQS queue.
 
 - `options` - These options will be sent to the Amazon SQS `receiveMessage` function defined here: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SQS.html#receiveMessage-property
-- `handler` - A function that returns a promise, which is meant to handle the message. The first parameter will be the message body as a JSON object.
+- `handler` - A function that returns a promise, which is meant to handle the message. The first parameter will be the message body as a JSON object. The second parameter will be the SQS message object
+
+#### changeMessageVisibility (message, newVisibilityTimeout)
+
+- `message` - The SQS message returned as the second parameter to your `pollQueue` handler method
+- `newVisibilityTimeout` - The new visibility timeout you want applied to this message measured in seconds.

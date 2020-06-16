@@ -51,6 +51,35 @@ Client.prototype.sendMessage = function sendMessage (payload, options = {}) {
 };
 
 /*
+ * Send an array of messages (up to 10) to the SQS queue
+ *
+ * @param payloads - An array of objects containing the message data
+ */
+
+Client.prototype.sendMessageBatch = function sendMessageBatch (payloads, options = {}) {
+  if (!payloads || !Array.isArray(payloads)) {
+    throw new Error('You must pass in an array of payloads.');
+  }
+
+  const Entries = payloads.map(function (payload) {
+    return {
+      ...options,
+      MessageBody = JSON.stringify(payload)
+    }
+  });
+
+  return new Promise((resolve, reject) => {
+    this.sqs.sendMessageBatch({ Entries }, function (err, data) {
+      if (err) {
+        return reject(err);
+      }
+
+      return resolve(data);
+    });
+  });
+}
+
+/*
  * Poll the SQS queue for new messages
  *
  * @param opts - An object to pass directly to the aws `receiveMessage` method
@@ -121,6 +150,28 @@ Client.prototype.handleMessage = function handleMessage (message, handler) {
     return this.removeVisibilityTimeout(message);
   });
 };
+
+/*
+ * Change the visibility timeout of a message
+ *
+ * @param message - A message returned from SQS
+ * @param newVisibilityTimeout - The new visibility timeout measured in seconds
+ */
+
+Client.prototype.changeVisibilityTimeout = function (message, newVisibilityTimeout) {
+  return new Promise((resolve, reject) => {
+    this.sqs.changeMessageVisibility({
+      ReceiptHandle: message.ReceiptHandle,
+      VisibilityTimeout: newVisibilityTimeout
+    }, function (err, data) {
+      if (data) {
+        return resolve(data);
+      }
+
+      return reject(err);
+    });
+  });
+}
 
 Client.prototype.removeVisibilityTimeout = function removeVisibilityTimeout (message) {
   return new Promise((resolve) => {
