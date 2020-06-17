@@ -2,6 +2,7 @@
 
 const assign = require('lodash.assign');
 const aws = require('aws-sdk');
+const uuid = require('uuid');
 
 const Client = function Client (opts = {}) {
   if (!(this instanceof Client)) {
@@ -64,6 +65,7 @@ Client.prototype.sendMessageBatch = function sendMessageBatch (payloads, options
   const Entries = payloads.map(function (payload) {
     return {
       ...options,
+      Id: uuid.v4(),
       MessageBody: JSON.stringify(payload)
     };
   });

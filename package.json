@@ -31,7 +31,8 @@
   "homepage": "https://github.com/meadow/sqs",
   "dependencies": {
     "aws-sdk": "^2.4.7",
-    "lodash.assign": "^4.0.9"
+    "lodash.assign": "^4.0.9",
+    "uuid": "^8.1.0"
   },
   "devDependencies": {
     "@meadow/eslint-config": "^2.0.0",
