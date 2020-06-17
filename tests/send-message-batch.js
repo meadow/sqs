@@ -29,10 +29,10 @@ test('returns a promise', (t) => {
   t.true(typeof value.then === 'function');
 });
 
-test('calls sendMessageBatch with the message body', (t) => {
+test('calls sendMessageBatch with the message body', async (t) => {
   const message = { type: 'ACTION_TYPE', payload: 1337 };
 
-  t.context.client.sendMessageBatch([message]);
+  await t.context.client.sendMessageBatch([message]);
 
   t.true(t.context.client.sqs.sendMessageBatch.calledWith({
     Entries: [sinon.match({
@@ -41,10 +41,10 @@ test('calls sendMessageBatch with the message body', (t) => {
   }));
 });
 
-test('should extend the default options', (t) => {
+test('should extend the default options', async (t) => {
   const message = { type: 'ACTION_TYPE', payload: 1337 };
 
-  t.context.client.sendMessageBatch([message], { DelaySeconds: 3 });
+  await t.context.client.sendMessageBatch([message], { DelaySeconds: 3 });
 
   t.true(t.context.client.sqs.sendMessageBatch.calledWith({
     Entries: [sinon.match({

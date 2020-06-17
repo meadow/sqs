@@ -166,11 +166,11 @@ Client.prototype.changeVisibilityTimeout = function (message, newVisibilityTimeo
       ReceiptHandle: message.ReceiptHandle,
       VisibilityTimeout: newVisibilityTimeout
     }, function (err, data) {
-      if (data) {
-        return resolve(data);
+      if (err) {
+        return reject(err);
       }
 
-      return reject(err);
+      return resolve(data);
     });
   });
 };

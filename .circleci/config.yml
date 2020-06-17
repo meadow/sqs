@@ -1,10 +1,5 @@
 version: 2
-  
-machine:
-  node:
-    version: 6.3.0
 
-workflow:
 jobs:
   build:
     docker:
