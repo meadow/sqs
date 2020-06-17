@@ -2,6 +2,7 @@
 
 const assign = require('lodash.assign');
 const aws = require('aws-sdk');
+const uuid = require('uuid');
 
 const Client = function Client (opts = {}) {
   if (!(this instanceof Client)) {
@@ -64,8 +65,9 @@ Client.prototype.sendMessageBatch = function sendMessageBatch (payloads, options
   const Entries = payloads.map(function (payload) {
     return {
       ...options,
-      MessageBody = JSON.stringify(payload)
-    }
+      Id: uuid.v4(),
+      MessageBody: JSON.stringify(payload)
+    };
   });
 
   return new Promise((resolve, reject) => {
@@ -77,7 +79,7 @@ Client.prototype.sendMessageBatch = function sendMessageBatch (payloads, options
       return resolve(data);
     });
   });
-}
+};
 
 /*
  * Poll the SQS queue for new messages
@@ -164,14 +166,14 @@ Client.prototype.changeVisibilityTimeout = function (message, newVisibilityTimeo
       ReceiptHandle: message.ReceiptHandle,
       VisibilityTimeout: newVisibilityTimeout
     }, function (err, data) {
-      if (data) {
-        return resolve(data);
+      if (err) {
+        return reject(err);
       }
 
-      return reject(err);
+      return resolve(data);
     });
   });
-}
+};
 
 Client.prototype.removeVisibilityTimeout = function removeVisibilityTimeout (message) {
   return new Promise((resolve) => {
