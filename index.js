@@ -64,8 +64,8 @@ Client.prototype.sendMessageBatch = function sendMessageBatch (payloads, options
   const Entries = payloads.map(function (payload) {
     return {
       ...options,
-      MessageBody = JSON.stringify(payload)
-    }
+      MessageBody: JSON.stringify(payload)
+    };
   });
 
   return new Promise((resolve, reject) => {
@@ -77,7 +77,7 @@ Client.prototype.sendMessageBatch = function sendMessageBatch (payloads, options
       return resolve(data);
     });
   });
-}
+};
 
 /*
  * Poll the SQS queue for new messages
@@ -171,7 +171,7 @@ Client.prototype.changeVisibilityTimeout = function (message, newVisibilityTimeo
       return reject(err);
     });
   });
-}
+};
 
 Client.prototype.removeVisibilityTimeout = function removeVisibilityTimeout (message) {
   return new Promise((resolve) => {
