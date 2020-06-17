@@ -35,9 +35,9 @@ test('calls sendMessageBatch with the message body', (t) => {
   t.context.client.sendMessageBatch([message]);
 
   t.true(t.context.client.sqs.sendMessageBatch.calledWith({
-    Entries: [{
+    Entries: [sinon.match({
       MessageBody: JSON.stringify(message)
-    }]
+    })]
   }));
 });
 
@@ -47,10 +47,10 @@ test('should extend the default options', (t) => {
   t.context.client.sendMessageBatch([message], { DelaySeconds: 3 });
 
   t.true(t.context.client.sqs.sendMessageBatch.calledWith({
-    Entries: [{
+    Entries: [sinon.match({
       MessageBody: JSON.stringify(message),
       DelaySeconds: 3
-    }]
+    })]
   }));
 });
 
