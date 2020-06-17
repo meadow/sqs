@@ -1,0 +1,49 @@
+version: 2
+  
+machine:
+  node:
+    version: 6.3.0
+
+workflow:
+jobs:
+  build:
+    docker:
+      - image: circleci/node:12.16.3
+
+    steps:
+      - checkout
+      - run:
+          name: output-node-version
+          command: 'node -v'
+      - run:
+          name: output-npm-version
+          command: 'npm -v'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-npm
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: test
+          command: npm run cover
+      - run:
+          name: lint
+          command: npm run lint
+      - run:
+          name: code-coverage
+          command: './node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov'
+      - run:
+          name: code-coverage-upload
+          command: './node_modules/.bin/codecov'
+      - store_artifacts:
+          path: test-results.xml
+          prefix: tests
+      - store_artifacts:
+          path: coverage
+          prefix: coverage
+      - store_test_results:
+          path: test-results.xml
