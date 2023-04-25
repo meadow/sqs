@@ -136,6 +136,8 @@ Client.prototype.pollQueue = function pollQueue (opts = {}, handler) {
  */
 
 Client.prototype.handleMessage = function handleMessage (message, handler) {
+  const { preventVisibilityTimeoutRemoval, visibilityTimeoutOnError } = this.options;
+
   const messagePromise = Promise.resolve().then(function () {
     const body = JSON.parse(message.Body);
 
@@ -145,8 +147,12 @@ Client.prototype.handleMessage = function handleMessage (message, handler) {
   return messagePromise.then(() => {
     return this.deleteMessage(message.ReceiptHandle);
   }).catch(() => {
-    if (this.options.preventVisibilityTimeoutRemoval === true) {
+    if (preventVisibilityTimeoutRemoval === true) {
       return Promise.resolve();
+    }
+
+    if (visibilityTimeoutOnError) {
+      return this.changeVisibilityTimeout(message, visibilityTimeoutOnError);
     }
 
     return this.removeVisibilityTimeout(message);
