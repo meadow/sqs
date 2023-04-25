@@ -129,6 +129,23 @@ test.cb('should call removeVisibilityTimeout after handler throws', (t) => {
   });
 });
 
+test.cb('should call removeVisibilityTimeout after handler throws', (t) => {
+  t.plan(1);
+
+  t.context.data = {
+    Messages: [{ Body: '{ "foobar": "bazqux" }' }]
+  };
+
+  t.context.client.pollQueue({}, function () {
+    setImmediate(function () {
+      t.is(t.context.client.removeVisibilityTimeout.callCount, 1);
+      t.end();
+    });
+
+    throw new Error('bar');
+  });
+});
+
 test.cb('should call poll queue multiple times', (t) => {
   t.plan(1);
 
